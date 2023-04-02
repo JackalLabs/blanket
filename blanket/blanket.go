@@ -30,49 +30,65 @@ func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.
 	bLogger := logger.NewLogger()
 	balance := buildBalance()
 	ratio := buildDealRatio()
+	burns := buildBurns()
 
 	go updateSpaceUsage(ctx, green, time.Second*30, bLogger, url)
 	go updateBalance(ctx, balance, time.Second*60, bLogger, url)
-	go updateRatio(ctx, ratio, time.Second*120, bLogger)
+	go updateRatio(ctx, ratio, time.Second*60, bLogger)
+	go updateBurns(ctx, burns, time.Second*60, bLogger, url)
 
-	cc := container.SplitVertical(
-		container.Left(
-			container.SplitHorizontal(
-				container.Top(
+	cc := container.SplitHorizontal(
+		container.Top(
+			container.SplitVertical(
+				container.Left(
 					container.SplitHorizontal(
 						container.Top(
-							container.PlaceWidget(balance),
+							container.PlaceWidget(burns),
 							container.Border(linestyle.Light),
-							container.BorderTitle(" Balance "),
+							container.BorderTitle("Burned Contracts"),
 						),
 						container.Bottom(
 							container.PlaceWidget(ratio),
 							container.Border(linestyle.Light),
-							container.BorderTitle(" Deal/Stray Ratio "),
+							container.BorderTitle("Deal/Stray Ratio"),
 						),
 					),
 				),
-				container.Bottom(
-					container.PlaceWidget(bLogger.GetWidget()),
-					container.Border(linestyle.Light),
-					container.BorderTitle(" Logger "),
+				container.Right(
+					container.SplitHorizontal(
+						container.Top(
+							container.PlaceWidget(balance),
+							container.Border(linestyle.Light),
+							container.BorderTitle("Balance"),
+						),
+						container.Bottom(),
+					),
 				),
 			),
 		),
-		container.Right(
-			container.PlaceWidget(green),
-			container.Border(linestyle.Light),
-			container.BorderColor(cell.ColorRed),
-			container.BorderTitle(" Space "),
-			container.FocusedColor(cell.ColorRed),
-		),
+		container.Bottom(
+			container.SplitVertical(
+
+				container.Left(
+					container.PlaceWidget(bLogger.GetWidget()),
+					container.Border(linestyle.Light),
+					container.BorderTitle("Logger"),
+				),
+				container.Right(
+					container.PlaceWidget(green),
+					container.Border(linestyle.Light),
+					container.BorderColor(cell.ColorRed),
+					container.BorderTitle("Space"),
+					container.FocusedColor(cell.ColorRed),
+				),
+			)),
 	)
 
 	c, err := container.New(
 		t,
 		cc,
 		container.Border(linestyle.Light),
-		container.BorderTitle(fmt.Sprintf(" Blanket - %s ", url)),
+		container.BorderTitle(fmt.Sprintf("Blanket - %s", url)),
 	)
 
 	return c, err

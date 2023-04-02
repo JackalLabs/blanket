@@ -14,6 +14,10 @@ type PriceResponse struct {
 	Price float64 `json:"price"`
 }
 
+type IndexResponse struct {
+	Address string `json:"address"`
+}
+
 type Balance struct {
 	Denom  string `json:"denom"`
 	Amount string `json:"amount"`
@@ -25,4 +29,12 @@ type APIResponse struct {
 
 type Pagination struct {
 	Count string `json:"total"`
+}
+
+type Providers struct {
+	Providers Provider `json:"providers"`
+}
+
+type Provider struct {
+	BurnedContracts string `json:"burned_contracts"`
 }
