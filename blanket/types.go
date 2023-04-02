@@ -1,4 +1,4 @@
-package main
+package blanket
 
 type SpaceResponse struct {
 	TotalSpace int64 `json:"total_space"`

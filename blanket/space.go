@@ -1,4 +1,4 @@
-package main
+package blanket
 
 func (s *SpaceResponse) GetPercentUsed() int {
 	if s.TotalSpace == 0 {
