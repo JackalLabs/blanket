@@ -3,3 +3,5 @@ install:
 
 build:
 	go build -mod=readonly $(BUILD_FLAGS) -o build/blanket ./blanket
+
+PHONY: install, buildq

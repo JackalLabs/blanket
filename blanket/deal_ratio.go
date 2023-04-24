@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/JackalLabs/blanket/logger"
@@ -63,8 +64,11 @@ func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 
+		fcount, _ := strconv.ParseFloat(deals.Pagination.Count, 64)
+		scount, _ := strconv.ParseFloat(strays.Pagination.Count, 64)
+
 		t.Reset()
-		t.Write(fmt.Sprintf("%s : %s", deals.Pagination.Count, strays.Pagination.Count))
+		t.Write(fmt.Sprintf("%s : %s | %.2f%% healthy", deals.Pagination.Count, strays.Pagination.Count, 100*(fcount/(scount+fcount))))
 
 	}
 	run()

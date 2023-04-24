@@ -38,3 +38,23 @@ type Providers struct {
 type Provider struct {
 	BurnedContracts string `json:"burned_contracts"`
 }
+
+type BlockResponse struct {
+	Block Block `json:"block"`
+}
+
+type Block struct {
+	Header BlockHeader `json:"header"`
+}
+
+type BlockHeader struct {
+	Height string `json:"height"`
+}
+
+type ParamResponse struct {
+	Params Params `json:"params"`
+}
+
+type Params struct {
+	ProofWindow string `json:"proof_window"`
+}

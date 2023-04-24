@@ -16,11 +16,15 @@ import (
 )
 
 func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.Container, error) {
-	spaceColor := cell.ColorRed
-	green, err := donut.New(
-		donut.CellOpts(cell.FgColor(spaceColor)),
-		donut.TextCellOpts(cell.FgColor(spaceColor)),
-		donut.Label("Space Used", cell.FgColor(spaceColor)),
+	spaceDonut, err := donut.New(
+		donut.CellOpts(cell.FgColor(cell.ColorRed)),
+		donut.TextCellOpts(cell.FgColor(cell.ColorRed)),
+		donut.Label("Space Used", cell.FgColor(cell.ColorRed)),
+	)
+	blockTimeDonut, err := donut.New(
+		donut.CellOpts(cell.FgColor(cell.ColorBlue)),
+		donut.TextCellOpts(cell.FgColor(cell.ColorBlue)),
+		donut.Label("Proof Window", cell.FgColor(cell.ColorBlue)),
 	)
 
 	if err != nil {
@@ -32,10 +36,11 @@ func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.
 	ratio := buildDealRatio()
 	burns := buildBurns()
 
-	go updateSpaceUsage(ctx, green, time.Second*30, bLogger, url)
+	go updateSpaceUsage(ctx, spaceDonut, time.Second*30, bLogger, url)
 	go updateBalance(ctx, balance, time.Second*60, bLogger, url)
 	go updateRatio(ctx, ratio, time.Second*60, bLogger)
 	go updateBurns(ctx, burns, time.Second*60, bLogger, url)
+	go updateBlockTime(ctx, blockTimeDonut, time.Second*10, bLogger, "https://api.jackalprotocol.com")
 
 	cc := container.SplitHorizontal(
 		container.Top(
@@ -75,11 +80,21 @@ func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.
 					container.BorderTitle("Logger"),
 				),
 				container.Right(
-					container.PlaceWidget(green),
-					container.Border(linestyle.Light),
-					container.BorderColor(cell.ColorRed),
-					container.BorderTitle("Space"),
-					container.FocusedColor(cell.ColorRed),
+					container.SplitVertical(
+						container.Left(
+							container.PlaceWidget(spaceDonut),
+							container.Border(linestyle.Light),
+							container.BorderColor(cell.ColorRed),
+							container.BorderTitle("Space"),
+							container.FocusedColor(cell.ColorRed),
+						),
+						container.Right(
+							container.PlaceWidget(blockTimeDonut),
+							container.Border(linestyle.Light),
+							container.BorderColor(cell.ColorBlue),
+							container.BorderTitle("Proof Window"),
+							container.FocusedColor(cell.ColorBlue),
+						)),
 				),
 			)),
 	)
