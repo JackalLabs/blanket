@@ -17,6 +17,6 @@ func main() {
 
 	url := os.Args[1]
 
-	blanket.CmdRunBlanket(url)
+	blanket.CmdRunBlanket(url, "https://api.jackalprotocol.com")
 
 }

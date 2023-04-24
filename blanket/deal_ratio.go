@@ -13,9 +13,9 @@ import (
 	"github.com/mum4k/termdash/widgets/text"
 )
 
-const apiURL = "https://api.jackalprotocol.com/jackal-dao/canine-chain/storage/"
+const storageAPI = "/jackal-dao/canine-chain/storage/"
 
-func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger *logger.Logger) {
+func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger *logger.Logger, api string) {
 	ticker := time.NewTicker(delay)
 	running := false
 
@@ -28,7 +28,7 @@ func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 		running = true
-		r, err := http.Get(fmt.Sprintf("%s/strays", apiURL))
+		r, err := http.Get(fmt.Sprintf("%s%s/strays", api, storageAPI))
 		if err != nil {
 			logger.Error(err)
 			return
@@ -46,7 +46,7 @@ func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 
-		dealRes, err := http.Get(fmt.Sprintf("%s/active_deals", apiURL))
+		dealRes, err := http.Get(fmt.Sprintf("%s%s/active_deals", api, storageAPI))
 		if err != nil {
 			logger.Error(err)
 			return

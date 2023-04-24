@@ -15,7 +15,7 @@ import (
 	"github.com/mum4k/termdash/widgets/donut"
 )
 
-func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.Container, error) {
+func build(ctx context.Context, t terminalapi.Terminal, url string, api string) (*container.Container, error) {
 	spaceDonut, err := donut.New(
 		donut.CellOpts(cell.FgColor(cell.ColorRed)),
 		donut.TextCellOpts(cell.FgColor(cell.ColorRed)),
@@ -38,9 +38,9 @@ func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.
 
 	go updateSpaceUsage(ctx, spaceDonut, time.Second*30, bLogger, url)
 	go updateBalance(ctx, balance, time.Second*60, bLogger, url)
-	go updateRatio(ctx, ratio, time.Second*60, bLogger)
-	go updateBurns(ctx, burns, time.Second*60, bLogger, url)
-	go updateBlockTime(ctx, blockTimeDonut, time.Second*10, bLogger, "https://api.jackalprotocol.com")
+	go updateRatio(ctx, ratio, time.Second*60, bLogger, api)
+	go updateBurns(ctx, burns, time.Second*60, bLogger, url, api)
+	go updateBlockTime(ctx, blockTimeDonut, time.Second*10, bLogger, api)
 
 	cc := container.SplitHorizontal(
 		container.Top(
@@ -109,7 +109,7 @@ func build(ctx context.Context, t terminalapi.Terminal, url string) (*container.
 	return c, err
 }
 
-func CmdRunBlanket(url string) {
+func CmdRunBlanket(url string, api string) {
 	t, err := tcell.New()
 	if err != nil {
 		panic(err)
@@ -118,7 +118,7 @@ func CmdRunBlanket(url string) {
 
 	ctx, cancel := context.WithCancel(context.Background())
 
-	c, err := build(ctx, t, url)
+	c, err := build(ctx, t, url, api)
 	if err != nil {
 		panic(err)
 	}

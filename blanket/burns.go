@@ -12,7 +12,7 @@ import (
 	"github.com/mum4k/termdash/widgets/text"
 )
 
-func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger *logger.Logger, url string) {
+func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger *logger.Logger, url string, api string) {
 	ticker := time.NewTicker(delay)
 	running := false
 
@@ -43,7 +43,7 @@ func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 
-		dealRes, err := http.Get(fmt.Sprintf("%s/providers/%s", apiURL, index.Address))
+		dealRes, err := http.Get(fmt.Sprintf("%s%s/providers/%s", api, storageAPI, index.Address))
 		if err != nil {
 			logger.Error(err)
 			return
