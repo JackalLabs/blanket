@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	//nolint
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -75,8 +76,7 @@ func updateBalance(ctx context.Context, t *text.Text, delay time.Duration, logge
 		tokenPrice := jklBalance * price.Price
 
 		t.Reset()
-		t.Write(fmt.Sprintf("%.2fjkl ≈ $%.2f", jklBalance, tokenPrice))
-
+		_ = t.Write(fmt.Sprintf("%.2fjkl ≈ $%.2f", jklBalance, tokenPrice))
 	}
 	run()
 	defer ticker.Stop()

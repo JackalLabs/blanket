@@ -13,13 +13,11 @@ type Logger struct {
 }
 
 func (l *Logger) Info(s string) {
-	l.text.Write(fmt.Sprintf("%s [Info]: %s\n", time.Now().Format("15:04:05"), s), text.WriteCellOpts(cell.FgColor(cell.ColorDefault)))
-
+	_ = l.text.Write(fmt.Sprintf("%s [Info]: %s\n", time.Now().Format("15:04:05"), s), text.WriteCellOpts(cell.FgColor(cell.ColorDefault)))
 }
 
 func (l *Logger) Error(err error) {
-
-	l.text.Write(fmt.Sprintf("%s [Error]: %s\n", time.Now().Format("15:04:05"), err.Error()), text.WriteCellOpts(cell.FgColor(cell.ColorRed)))
+	_ = l.text.Write(fmt.Sprintf("%s [Error]: %s\n", time.Now().Format("15:04:05"), err.Error()), text.WriteCellOpts(cell.FgColor(cell.ColorRed)))
 }
 
 func (l *Logger) GetWidget() *text.Text {

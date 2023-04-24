@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	//nolint
 	"io/ioutil"
 	"net/http"
 	"time"
@@ -17,7 +18,6 @@ func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger 
 	running := false
 
 	run := func() {
-
 		var index IndexResponse
 		var provider Providers
 
@@ -25,7 +25,7 @@ func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 		running = true
-		r, err := http.Get(fmt.Sprintf("%s", url))
+		r, err := http.Get(url)
 		if err != nil {
 			logger.Error(err)
 			return
@@ -62,8 +62,7 @@ func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger 
 		}
 
 		t.Reset()
-		t.Write(fmt.Sprintf("%s", provider.Providers.BurnedContracts))
-
+		_ = t.Write(provider.Providers.BurnedContracts)
 	}
 	run()
 	defer ticker.Stop()

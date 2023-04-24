@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	// nolint
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -20,7 +21,6 @@ func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger 
 	running := false
 
 	run := func() {
-
 		var strays APIResponse
 		var deals APIResponse
 
@@ -68,8 +68,7 @@ func updateRatio(ctx context.Context, t *text.Text, delay time.Duration, logger 
 		scount, _ := strconv.ParseFloat(strays.Pagination.Count, 64)
 
 		t.Reset()
-		t.Write(fmt.Sprintf("%s : %s | %.2f%% healthy", deals.Pagination.Count, strays.Pagination.Count, 100*(fcount/(scount+fcount))))
-
+		_ = t.Write(fmt.Sprintf("%s : %s | %.2f%% healthy", deals.Pagination.Count, strays.Pagination.Count, 100*(fcount/(scount+fcount))))
 	}
 	run()
 	defer ticker.Stop()

@@ -21,12 +21,14 @@ func build(ctx context.Context, t terminalapi.Terminal, url string, api string) 
 		donut.TextCellOpts(cell.FgColor(cell.ColorRed)),
 		donut.Label("Space Used", cell.FgColor(cell.ColorRed)),
 	)
+	if err != nil {
+		panic(err)
+	}
 	blockTimeDonut, err := donut.New(
 		donut.CellOpts(cell.FgColor(cell.ColorBlue)),
 		donut.TextCellOpts(cell.FgColor(cell.ColorBlue)),
 		donut.Label("Proof Window", cell.FgColor(cell.ColorBlue)),
 	)
-
 	if err != nil {
 		panic(err)
 	}

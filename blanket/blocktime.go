@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	//nolint
 	"io/ioutil"
 	"net/http"
 	"strconv"
