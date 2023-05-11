@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strconv"
+
 	//nolint
 	"io/ioutil"
 	"net/http"
@@ -16,6 +18,8 @@ import (
 func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger *logger.Logger, url string, api string) {
 	ticker := time.NewTicker(delay)
 	running := false
+
+	var oldContracts int64
 
 	run := func() {
 		var index IndexResponse
@@ -61,8 +65,18 @@ func updateBurns(ctx context.Context, t *text.Text, delay time.Duration, logger 
 			return
 		}
 
+		burned, err := strconv.ParseInt(provider.Providers.BurnedContracts, 10, 64)
+
+		changed := burned - oldContracts
+		sign := "-"
+		if changed > 0 {
+			sign = "+"
+		}
+
 		t.Reset()
-		_ = t.Write(provider.Providers.BurnedContracts)
+		_ = t.Write(fmt.Sprintf("%d | %s%d", burned, sign, changed))
+
+		oldContracts = burned
 	}
 	run()
 	defer ticker.Stop()
